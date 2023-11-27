@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SourceCode">
+      <UniqueIdentifier>{dd952bbf-94eb-45cf-b839-5878fa90001b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{e4dac76b-e206-4c13-911b-29be8438fb90}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="vertex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="function.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="function.h">
+      <Filter>SourceCode</Filter>
+    </ClInclude>
+    <ClInclude Include="header.h">
+      <Filter>SourceCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
