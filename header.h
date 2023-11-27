@@ -12,7 +12,7 @@
 	const auto seed = seeder.entropy() ? seeder() : time(nullptr);
 	mt19937 eng(static_cast<mt19937::result_type>(seed));
 	uniform_real_distribution<double> snowPosition(-1.0f, 1.0f);
-	uniform_real_distribution<double> snowSpeed(0.5f, 1.5f);
+	uniform_real_distribution<double> snowSpeed(2.0f, 3.0f);
 	uniform_real_distribution<double> randomRev(0.0f, 360.0f);
 	/*셰이더 프로그램 변수*/
 	GLuint shaderID;
@@ -24,22 +24,27 @@
 	std::vector< glm::vec2 > uvs;
 	std::vector< glm::vec3 > normals;
 	/*체크 변수*/
-	bool lightRoate;
+	int lightRoate = 0;
 	bool lightSwitch = true;
-	bool cameraRotate = false;
+	int cameraRotate = 0;
 	bool snowSwitch = false;
 	int lightColor = 0;
 	int lightPosition = 0;
+	bool lightCenter = true;
 	/*상태 변화 변수*/
-	float lightX = -1.0f, lightY = 0.0f, lightZ =0.0f;
+	float lightX = 0.0f, lightY = 3.0f, lightZ = 0.0f;
 	float lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
 	float lightRadiusZ = 0.0f;
 	float cameraX = 0.0f;
-	float cameraY = 5.0f;
+	float cameraY = 10.0f;
 	float cameraZ = 0.0f;
 	float cameraRaidans = 0.0f;
 	float lightPower = 1.0f;
 	float lightVal = 90.0f;
+	/*카메라 설정*/
+	glm::vec3 cameraPos = glm::vec3(0.0f + cameraX, cameraY, 4.5f + cameraZ); //--- 카메라 위치를 이 좌표에 고정
+	glm::vec3 cameraDirection = glm::vec3(0.0f + cameraX, 0.0f, 0.0f + cameraZ); //--- 카메라 바라보는 방향. 계속 이 방향만 바라본다.
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
 	/*버텍스 배열*/
 	float cubeVerticles[] = { //--- 버텍스 속성: 좌표값(FragPos), 노말값 (Normal)
 		// 뒷면

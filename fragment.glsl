@@ -26,7 +26,7 @@ void main()
 	vec3 normalVector = normalize (Normal); //노말값을 정규화한다. 노말값들은 전부 정규화 되야 함. 그렇지 않으면 제대로 출력할 수 없다.
 	vec3 lightDir = normalize(lightPos - FragPos); //표면과 조명의 위치로 조명의 방향을 결정한다. 광원 벡터 생각하자.
 	float diffuseLight = max(dot (normalVector, lightDir), 0.0f);//노멀벡터와 광원 벡터의 내적(음수가 나올 수 없도록 최소값 0.0으로 제한)
-	vec3 diffuse = (2 / lightDistance) * lightPower * diffuseLight * lightColor; //산란 반사 조명 값 = 산란 반사 값 * 조명 색상 값	
+	vec3 diffuse = 1 / lightDistance * lightPower * diffuseLight * lightColor; //산란 반사 조명 값 = 산란 반사 값 * 조명 색상 값	
 
 	int shininess = 5; //광택 계수
 	float specularStrength = 1.0f;//광택 세기

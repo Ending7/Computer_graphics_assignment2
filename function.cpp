@@ -28,61 +28,83 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 	switch (button)
 	{
 	case 'r':
-		lightRoate ? lightRoate = false : lightRoate = true;
+		lightCenter = false;
+		switch (lightRoate) {
+		case 0:
+			lightRoate = 1;
+			break;
+		case 1:
+			lightRoate = 0;
+			break;
+		case 2:
+			lightRoate = 1;
+			break;
+		}
+		break;
+	case 'R':
+		lightCenter = false;
+		switch (lightRoate) {
+		case 0:
+			lightRoate = 2;
+			break;
+		case 1:
+			lightRoate = 2;
+			break;
+		case 2:
+			lightRoate = 0;
+			break;
+		}
+		break;
+	case 'o':
+		lightCenter = true;
+		lightRoate = 0;
+		break;
+	case 'y':
+		switch (cameraRotate) {
+		case 0:
+			cameraRotate = 1;
+			break;
+		case 1:
+			cameraRotate = 0;
+			break;
+		case 2:
+			cameraRotate = 1;
+			break;
+		}
+		break;
+	case 'Y':
+		switch (cameraRotate) {
+		case 0:
+			cameraRotate = 2;
+			break;
+		case 1:
+			cameraRotate = 2;
+			break;
+		case 2:
+			cameraRotate = 0;
+			break;
+		}
+		break;
+	case 'u':
+		lightY -= 0.02f;
+		break;
+	case 'U':
+		lightY += 0.02f;
 		break;
 	case 's':
 		snowSwitch ? snowSwitch = false : snowSwitch = true;
 		break;
 	case 'n':
-		switch (lightPosition)
-		{
-		case 1:
-			lightZ -= 0.1f;
-			break;
-		case 2:
-			lightX -= 0.1f;
-			break;
-		case 3:
-			lightZ += 0.1f;
-			break;
-		case 0:
-			lightX += 0.1f;
-			break;
-		}
+		lightRadiusZ -= 0.02f;
 		break;
 	case 'f':
-		switch (lightPosition)
-		{
-		case 1:
-			lightZ += 0.1f;
-			break;
-		case 2:
-			lightX += 0.1f;
-			break;
-		case 3:
-			lightZ -= 0.1f;
-			break;
-		case 0:
-			lightX -= 0.1f;
-			break;
-		}
+		lightRadiusZ += 0.02f;
 		break;
-	case '+':
-		lightPower += 0.1f;
-		break;
-	case '-':
+	case '[':
 		lightPower -= 0.1f;
 		break;
-	case 'm':
-		lightSwitch ? lightSwitch = false : lightSwitch = true;
-		/*셰이더: 조명 스위치 넣기*/
-		if (lightSwitch == true) {
-			glUniform1i(lightSwitchLocation, 0);
-		}
-		else
-		{
-			glUniform1i(lightSwitchLocation, 1);
-		}
+	case ']':
+		lightPower += 0.1f;
 		break;
 	case 'c':
 		switch (lightColor)
@@ -101,25 +123,15 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 			break;
 		}
 		break;
-	case 'p':
-		switch (lightPosition)
+	case 't':
+		lightSwitch ? lightSwitch = false : lightSwitch = true;
+		/*셰이더: 조명 스위치 넣기*/
+		if (lightSwitch == true) {
+			glUniform1i(lightSwitchLocation, 0);
+		}
+		else
 		{
-		case 0:
-			lightX = 0.0f, lightY = 0.0f, lightZ = 1.0f;	
-			lightPosition = 1;
-			break;
-		case 1:
-			lightX = 1.0f, lightY = 0.0f, lightZ = 0.0f;
-			lightPosition = 2;
-			break;
-		case 2:
-			lightX = 0.0f, lightY = 0.0f, lightZ = -1.0f;
-			lightPosition = 3;
-			break;
-		case 3:
-			lightX = -1.0f, lightY = 0.0f, lightZ = 0.0f;
-			lightPosition = 0;
-			break;
+			glUniform1i(lightSwitchLocation, 1);
 		}
 		break;
 	case 'q':
@@ -131,11 +143,31 @@ GLvoid TimerFunction(int value)
 {
 	/*변화해야 할 부분*/
 	/*조명 회전*/
-	if (lightRoate == true) {
+	if (lightRoate == 1) {
 		lightRadians = lightVal / 360.0f * 2.0f * 3.141592f;
-		lightVal += 2.0f;
+		lightVal -= 5.0f;
+		if (lightVal <= -360.0f) {
+			lightVal = 0.0f;
+		}
+	}
+	else if (lightRoate == 2) {
+		lightRadians = lightVal / 360.0f * 2.0f * 3.141592f;
+		lightVal += 5.0f;
 		if (lightVal >= 360.0f) {
 			lightVal = 0.0f;
+		}
+	}
+	/*카메라 회전*/
+	if (cameraRotate == 1) {
+		cameraRaidans -= 5.0f;
+		if (cameraRaidans <= -360.0f) {
+			cameraRaidans = 0.0f;
+		}
+	}
+	else if (cameraRotate == 2) {
+		cameraRaidans += 5.0f;
+		if (cameraRaidans >= 360.0f) {
+			cameraRaidans = 0.0f;
 		}
 	}
 	unsigned int lightPowerLocation = glGetUniformLocation(shaderID, "lightPower");
@@ -151,92 +183,51 @@ void InitObject()
 {
 	lightCube.SetAlive(true);
 	cube.SetAlive(true);
-	pyramid.SetAlive(true);
-	frontPyramid.SetAlive(true);
-	sphere[0].SetAlive(true);
-	sphere[1].SetAlive(true);
-	sphere[2].SetAlive(true);
 	/*눈*/
 	for (int i = 0; i < 50; i++)
 	{
 		snow[i].SetAlive(true);
 		snow[i].SetRevType(3);
 		snow[i].SetPosition((float)snowPosition(eng), 4.0f, (float)snowPosition(eng));
-		snow[i].SetColor(0.5f,0.5f,0.9f);
+		snow[i].SetColor(0.5f, 0.5f, 0.9f);
 	}
 	/*PLAIN*/
 	cube.SetColor(0.3f, 0.3f, 0.3f);
 	cube.SetScale(3.0f,0.1f,3.0f);
-	/*피라미드*/
-	pyramid.SetPosition(0.0f, 0.5f, 0.0f);
-	pyramid.SetColor(0.3f, 0.7f, 0.9f);
-	pyramid.SetScale(1.0f, 1.0f, 1.0f);
-	/*피라미드 앞면*/
-	frontPyramid.SetPosition(0.0f, 0.5f, 0.0f);
-	frontPyramid.SetColor(0.3f, 0.7f, 0.9f);
-	frontPyramid.SetScale(1.0f, 1.0f, 1.0f);
-	/*구*/
-	sphere[0].SetRevType(0);
-	sphere[0].SetColor(1.0f, 0.0f, 0.0f);
-	sphere[0].SetPosition(0.0f, 0.0f, 0.0f);
-	sphere[1].SetRevType(1);
-	sphere[1].SetColor(0.0f, 1.0f, 0.0f);
-	sphere[1].SetPosition(0.0f, 0.0f, 0.0f);
-	sphere[2].SetRevType(2);
-	sphere[2].SetColor(0.0f, 0.0f, 1.0f);
-	sphere[2].SetPosition(0.0f, 0.0f, 0.0f);
-
 }
 void InitBuffer()
 {
-	/*PLAIN*/
-	cube.InitBuffer();
-	/*피라미드*/
-	pyramid.InitBuffer();
-	/*피라미드 앞면*/
-	/*구*/
-	sphere[0].InitBuffer();
-	sphere[1].InitBuffer();
-	sphere[2].InitBuffer();
 	/*눈*/
 	for (int i = 0; i < 50; i++)
 	{
 		snow[i].InitBuffer();
 	}
+	/*PLAIN*/
+	cube.InitBuffer();
 	/*조명*/
 	lightCube.InitBuffer();
 }
 /*********************화면 출력 함수*******************/
 void Draw()
 {
-	
 	/*카메라 변환*/
 	CameraTransform();
 	/*조명 변환*/
 	LightTransform();
-	/*PLAIN*/
-	cube.Draw();
-	/*피라미드*/
-	pyramid.Draw();
-	/*구*/
-	sphere[0].Draw();
-	sphere[1].Draw();
-	sphere[2].Draw();
 	/*눈*/
 	for (int i = 0; i < 50; i++)
 	{
 		snow[i].Draw();
 	}
+	/*PLAIN*/
+	cube.Draw();
 	/*조명*/
 	lightCube.Draw();
 }
 /*******************카메라 변환 함수*******************/
 void CameraTransform()
 {
-	/*카메라 설정*/
-	glm::vec3 cameraPos = glm::vec3(0.0f + cameraX, cameraY, 4.5f + cameraZ); //--- 카메라 위치를 이 좌표에 고정
-	glm::vec3 cameraDirection = glm::vec3(0.0f+ cameraX, 0.0f, 0.0f + cameraZ); //--- 카메라 바라보는 방향. 계속 이 방향만 바라본다.
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); //--- 카메라 위쪽 방향
+
 
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
@@ -259,6 +250,15 @@ void CameraTransform()
 /********************조명 변환 함수********************/
 void LightTransform()
 {
+	/*조명 좌표*/
+	if (lightCenter == false) {
+		lightX = (1.0f + lightRadiusZ) * cos(lightRadians);
+		lightZ = (1.0f + lightRadiusZ) * sin(lightRadians);
+	}
+	else {
+		lightX = 0.0f;
+		lightZ = 0.0f;
+	}
 	/*셰이더: 조명 좌표 넣기*/
 	unsigned int lightPosLocation = glGetUniformLocation(shaderID, "lightPos");
 	glUniform3f(lightPosLocation, lightX, lightY, lightZ);
@@ -282,7 +282,7 @@ void LightTransform()
 
 	/*카메라 좌표 전달*/
 	unsigned int viewPosLocation = glGetUniformLocation(shaderID, "viewPos"); 
-	glUniform3f(viewPosLocation, 0.0f, 3.0f, 5.0f);
+	glUniform3f(viewPosLocation,cameraPos.x, cameraPos.y, cameraPos.z);
 }
 /*****************Class::LightCube 함수****************/
 void LightCube::InitBuffer()
