@@ -165,6 +165,7 @@ class Cube
 		void Transform();
 		void MoveSpeedUp();
 		void MoveSpeedDown();
+		void ChangeAnimation(int type);
 		void Reset();
 		/*애니메이션*/
 		void Move();

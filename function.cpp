@@ -29,8 +29,20 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 	unsigned int lightSwitchLocation = glGetUniformLocation(shaderID, "lightSwitch");
 	switch (button)
 	{
+	/*애니메이션 타입 변환*/
+	case '0':
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].ChangeAnimation(0);
+			}
+		}
+		break;
 	case '1':
-		
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].ChangeAnimation(1);
+			}
+		}
 		break;
 	case '2':
 
@@ -273,7 +285,7 @@ void InitBuffer()
 }
 void Devide() {
 	if (startCheck == true) {
-		printf("[1,2,3]:애니메이션 변환\n");
+		printf("[0,1,2,3]:애니메이션 변환\n");
 		printf("[+, -]:육면체 이동하는 속도 증가/감소\n");
 		printf("[k]:모든 값 초기화(새롭게 가로세로 값을 입력받아 애니메이션 시작한다. 단축키 k로 지정!!!! s가 아님.)\n");
 		printf("[t]:조명을 켜기/끄기\n");
@@ -580,6 +592,11 @@ void Cube::MoveSpeedUp() {
 void Cube::MoveSpeedDown() {
 	_startMoveSpeed -= 0.1f;
 	_speed -= 0.11f;
+}
+void Cube::ChangeAnimation(int type) {
+	_positionY = 0.0f;
+	_scaleY = 0.0f;
+	_moveAnimation = type;
 }
 void Cube::Reset() {
 	_Alive = false;
