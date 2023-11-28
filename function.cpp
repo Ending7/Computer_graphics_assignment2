@@ -38,6 +38,22 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 	case '3':
 
 		break;
+	/*스피드 증가*/
+	case '+':
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].MoveSpeedUp();
+			}
+		}
+		break;
+	/*스피드 감소*/
+	case '-':
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].MoveSpeedDown();
+			}
+		}
+		break;
 	case 'r':
 		lightCenter = false;
 		switch (lightRoate) {
@@ -226,6 +242,7 @@ void InitBuffer()
 void Devide() {
 	if (startCheck == true) {
 		printf("[1,2,3]:애니메이션 변환\n");
+		printf("[+, -]:육면체 이동하는 속도 증가/감소\n");
 		printf("[t]:조명을 켜기/끄기\n");
 		printf("[c]:조명 색을 다른 색으로 바뀌도록 한다. 3종류의 다른 색을 적용.\n");
 		printf("[o]:조명을 센터에 위치.\n");
@@ -494,8 +511,8 @@ void Cube::Move()
 	switch (_moveAnimation)
 	{
 	case 0:
-		_scaleY += 0.05f;
-		_positionY += 0.05f / 2;
+		_scaleY += 0.05f * _startMoveSpeed;
+		_positionY += 0.05f * _startMoveSpeed / 2;
 		if (_scaleY >= 3.0f) {
 			_moveAnimation = 1;
 		}
@@ -520,6 +537,14 @@ void Cube::Move()
 	}
 
 	
+}
+void Cube::MoveSpeedUp() {
+	_startMoveSpeed += 0.11f;
+	_speed += 0.1f;
+}
+void Cube::MoveSpeedDown() {
+	_startMoveSpeed -= 0.1f;
+	_speed -= 0.11f;
 }
 /******************Class::Sphere 함수******************/
 void Sphere::InitBuffer()

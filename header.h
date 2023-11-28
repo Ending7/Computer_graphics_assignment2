@@ -141,6 +141,7 @@ class Cube
 		float _scaleX, _scaleY, _scaleZ;
 		int _moveAnimation = 0;
 		int _moveArrow = 0;
+		float _startMoveSpeed = 1.0f;
 		float _speed;
 		float _moveMin;
 		float _moveMax;
@@ -162,9 +163,10 @@ class Cube
 		void Draw();
 		/*상태 변화*/
 		void Transform();
+		void MoveSpeedUp();
+		void MoveSpeedDown();
 		/*애니메이션*/
 		void Move();
-
 		~Cube()
 		{
 
