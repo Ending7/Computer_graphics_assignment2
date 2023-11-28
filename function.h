@@ -19,6 +19,7 @@ void LightTransform();
 /*초기화 함수*/
 void InitObject(); //객체 초기화
 void InitBuffer(); // vao, vbo 연결
+void Devide(); //칸 수 나누기
 void Draw(); // 그리기
 /*상태 변화 함수*/
 

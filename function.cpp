@@ -13,6 +13,8 @@ GLvoid drawScene()
 	/******************************************************************/
 	/*셰이더 프로그램 사용*/
 	glUseProgram(shaderID);
+	/*칸 수 나누기*/
+	Devide();
 	/*그리기*/
 	Draw();
 	/******************************************************************/
@@ -187,13 +189,12 @@ void InitObject()
 	for (int i = 0; i < 50; i++)
 	{
 		snow[i].SetAlive(true);
-		snow[i].SetRevType(3);
-		snow[i].SetPosition((float)snowPosition(eng), 4.0f, (float)snowPosition(eng));
+		snow[i].SetPosition((float)snowPosition(eng), 8.0f, (float)snowPosition(eng));
 		snow[i].SetColor(0.5f, 0.5f, 0.9f);
 	}
 	/*PLAIN*/
 	cube.SetColor(0.3f, 0.3f, 0.3f);
-	cube.SetScale(3.0f,0.1f,3.0f);
+	cube.SetScale(5.0f,0.1f,5.0f);
 }
 void InitBuffer()
 {
@@ -207,6 +208,65 @@ void InitBuffer()
 	/*조명*/
 	lightCube.InitBuffer();
 }
+void Devide() {
+	if (startCheck == true) {
+		printf("[t]:조명을 켜기/끄기\n");
+		printf("[c]:조명 색을 다른 색으로 바뀌도록 한다. 3종류의 다른 색을 적용.\n");
+		printf("[o]:조명을 센터에 위치.\n");
+		printf("[u,U]:조명을 위/아래로 이동\n");
+		printf("[r,R]:조명을 바닥의 y축을 기준으로 양/음 방향으로 회전. \n");
+		printf("[n,f]:조명을 가까이/멀리 이동\n");
+		printf("[[,]]:조명 밝기 감소/증가\n");
+		printf("[y,Y]:카메라를 바닥의 y축 기준으로 시계/반시계 방향으로 공전(다시 누르면 회전을 중지)\n");
+		printf("[s,S]:눈 내리기/멈추기\n");
+		printf("[q]:프로그램 종료\n");
+		printf("시작하기 전에 가로와 세로로 칸을 나누겠습니다.\n");
+
+		while (true) {
+			cout << "가로를 입력(5 ~ 25개 사이): ";
+			cin >> devideWidth;
+			if (devideWidth >= 5 and devideWidth <= 25) {
+				break;
+			}
+			else cout << "다시 입력" << endl;
+		}
+		
+		while (true) {
+			cout << "세로를 입력(5 ~ 25개 사이): ";
+			cin >> devideHeight;
+			if (devideHeight >= 5 and devideHeight <= 25) {
+				break;
+			}
+			else cout << "다시 입력" << endl;
+		}
+
+		///*오브젝트*/
+		//for (int i = 0; i < devideWidth * devideHeight; i++) {
+		//	object.push_back(Cube());
+		//}
+		//for (int i = 0; i < object.size(); i++) {
+		//	object[i].SetAlive(true);
+		//	object[i].InitBuffer();
+		//	object[i].SetColor(1.0f, 0.5f, 0.3f);
+		//	object[i].SetScale(1.0f, 1.0f, 1.0f);
+		//	object[i].SetPosition(0.0f+i*0.1f, 1.0f, 0.0f);
+		//}
+		/*cout << "현재 만들어진 도형의 개수: " << object.size() << endl;*/
+
+		/*오브젝트*/
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
+				object[i][j].InitBuffer();
+				object[i][j].SetColor(1.0f, 0.5f, 0.3f);
+				object[i][j].SetScale(1.0f, 1.0f, 1.0f);
+				object[i][j].SetPosition(0.0f + i * 0.1f, 1.0f, 0.0f);
+			}
+		}
+		startCheck = false;
+	}
+}
+
 /*********************화면 출력 함수*******************/
 void Draw()
 {
@@ -221,6 +281,12 @@ void Draw()
 	}
 	/*PLAIN*/
 	cube.Draw();
+	/*오브젝트*/
+	for (int i = 0; i < devideHeight; i++) {
+		for (int j = 0; j < devideWidth; j++) {
+			object[i][j].Draw();
+		}
+	}
 	/*조명*/
 	lightCube.Draw();
 }
@@ -233,7 +299,7 @@ void CameraTransform()
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
 	view = glm::rotate(view, glm::radians(cameraRaidans), glm::vec3(0.0f, 1.0f, 0.0f));
-	if (cameraRotate == true) {
+	if (cameraRotate != 0) {
 		view = glm::translate(view, glm::vec3(-cameraX, 0.0f, -cameraZ));
 	}
 	unsigned int viewLocation = glGetUniformLocation(shaderID, "view"); //--- 뷰잉 변환 설정
@@ -337,8 +403,6 @@ void LightCube::Transform()
 	/*리셋 한번 해주고*/
 	_mixMat = glm::mat4{ 1.0f };
 	_mixMat = glm::translate(_mixMat, glm::vec3(0.0f + lightX, 0.0f + lightY, 0.0f + lightZ));
-	_mixMat = glm::rotate(_mixMat, glm::radians(20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_mixMat = glm::rotate(_mixMat, glm::radians(30.0f + _rotateY), glm::vec3(0.0f, 1.0f, 0.0f));
 	_mixMat = glm::scale(_mixMat, glm::vec3(0.1f, 0.1f, 0.1f));
 	glUniformMatrix4fv(transformLocate, 1, GL_FALSE, glm::value_ptr(_mixMat));
 }
@@ -438,95 +502,6 @@ void Cube::Move()
 		_moveArrow = 0;
 	}
 }
-/*****************Class::Pyramid 함수******************/
-void Pyramid::InitBuffer()
-{
-	GLint pAttribute = glGetAttribLocation(shaderID, "vPos");
-	GLint nAttribute = glGetAttribLocation(shaderID, "vNormal");
-
-	/*create buffer*/
-	glGenVertexArrays(1, &_vao);
-	glGenBuffers(2, _vbo);
-
-	/*vao binding*/
-	glBindVertexArray(_vao);
-
-	/*vbo binding*/
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVerticles), pyramidVerticles, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); //--- 위치 속성
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); //--- 노말 속성
-	glEnableVertexAttribArray(1);
-
-	glEnableVertexAttribArray(pAttribute);
-	glEnableVertexAttribArray(nAttribute);
-}
-void Pyramid::Draw()
-{
-	/*도형의 색*/
-	if (_Alive == true)
-	{
-		glBindVertexArray(_vao);
-		int objColorLocation = glGetUniformLocation(shaderID, "objectColor");
-		glUniform3f(objColorLocation, _colorR, _colorG, _colorB);
-
-		/*초기화 후 변환 행렬 채우기*/
-		Transform();
-		glDrawArrays(GL_TRIANGLES, 0, 18);
-	}
-}
-void Pyramid::SetAlive(bool alive)
-{
-	if (alive == true)
-		_Alive = true;
-	else
-		_Alive = false;
-
-}
-void Pyramid::SetColor(float r, float g, float b)
-{
-	_colorR = r;
-	_colorG = g;
-	_colorB = b;
-}
-void Pyramid::SetPosition(float x, float y, float z)
-{
-	_positionX = x;
-	_positionY = y;
-	_positionZ = z;
-}
-void Pyramid::SetScale(float x, float y, float z)
-{
-	_scaleX = x;
-	_scaleY = y;
-	_scaleZ = z;
-}
-void Pyramid::Transform()
-{
-	unsigned int transformLocate = glGetUniformLocation(shaderID, "model");
-	/*리셋 한번 해주고*/
-	_mixMat = glm::mat4{ 1.0f };
-	_mixMat = glm::translate(_mixMat, glm::vec3(_positionX + _moveX, _positionY, _positionZ));
-	_mixMat = glm::scale(_mixMat, glm::vec3(_scaleX, _scaleY, _scaleZ));
-	glUniformMatrix4fv(transformLocate, 1, GL_FALSE, glm::value_ptr(_mixMat));
-}
-void Pyramid::Move()
-{
-	if (_moveArrow == 0) {
-		_moveX += 0.01f;
-	}
-	else if (_moveArrow == 1) {
-		_moveX -= 0.01f;
-	}
-
-	if (_moveX >= 1.0f) {
-		_moveArrow = 1;
-	}
-	else if (_moveX <= -1.0f) {
-		_moveArrow = 0;
-	}
-}
 /******************Class::Sphere 함수******************/
 void Sphere::InitBuffer()
 {
@@ -597,39 +572,18 @@ void Sphere::Transform()
 	
 	/*리셋 한번 해주고*/
 	_mixMat = glm::mat4{ 1.0f };
-	if (_revType == 0) {
-		_mixMat = glm::translate(_mixMat, glm::vec3(_positionX, 1.0f, _positionZ));
-		_mixMat = glm::rotate(_mixMat, glm::radians(_revolution), glm::vec3(0.0f, 0.0f, 1.0f));
-		_mixMat = glm::translate(_mixMat, glm::vec3(0.0f, 1.0f, 0.0f));
-		_mixMat = glm::scale(_mixMat, glm::vec3(1.0f, 1.0f, 1.0f));
-	}
-	else if (_revType == 1) {
-		_mixMat = glm::translate(_mixMat, glm::vec3(_positionX, 1.0f, _positionZ));
-		_mixMat = glm::rotate(_mixMat, glm::radians(_revolution), glm::vec3(1.0f, 0.0f, 0.0f));
-		_mixMat = glm::translate(_mixMat, glm::vec3(0.0f, 1.0f, 0.0f));
-		_mixMat = glm::scale(_mixMat, glm::vec3(0.5f, 0.5f, 0.5f));
-	}
-	else if (_revType == 2) {
-		_mixMat = glm::translate(_mixMat, glm::vec3(_positionX, 0.7f, _positionZ));
-		_mixMat = glm::rotate(_mixMat, glm::radians(_revolution), glm::vec3(0.0f, 1.0f, 0.0f));
-		_mixMat = glm::translate(_mixMat, glm::vec3(1.0f, 0.0f, 0.0f));
-		_mixMat = glm::scale(_mixMat, glm::vec3(0.7f, 0.7f, 0.7f));
-	}
-	else if (_revType == 3) {
+
 		if (snowSwitch == true) {
 			_positionY -= 0.01f * _speed;
 		}	
 		if (_positionY <= 0.0f)
 		{
-			_positionY = 4.0f, _positionX = (float)snowPosition(eng), _positionZ = (float)snowPosition(eng);
+			_positionY = 8.0f, _positionX = (float)snowPosition(eng), _positionZ = (float)snowPosition(eng);
 		}
 		_mixMat = glm::translate(_mixMat, glm::vec3(_positionX, _positionY, _positionZ));
 		_mixMat = glm::scale(_mixMat, glm::vec3(0.1f, 0.1f, 0.1f));
-		}
+
 	glUniformMatrix4fv(transformLocate, 1, GL_FALSE, glm::value_ptr(_mixMat));
-}
-void Sphere::SetRevType(int revType) {
-	_revType = revType;
 }
 /********************셰이더 프로그램*******************/
 void make_vertexShader()
