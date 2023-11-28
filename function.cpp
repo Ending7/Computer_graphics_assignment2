@@ -29,6 +29,15 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 	unsigned int lightSwitchLocation = glGetUniformLocation(shaderID, "lightSwitch");
 	switch (button)
 	{
+	case '1':
+		
+		break;
+	case '2':
+
+		break;
+	case '3':
+
+		break;
 	case 'r':
 		lightCenter = false;
 		switch (lightRoate) {
@@ -216,6 +225,7 @@ void InitBuffer()
 }
 void Devide() {
 	if (startCheck == true) {
+		printf("[1,2,3]:애니메이션 변환\n");
 		printf("[t]:조명을 켜기/끄기\n");
 		printf("[c]:조명 색을 다른 색으로 바뀌도록 한다. 3종류의 다른 색을 적용.\n");
 		printf("[o]:조명을 센터에 위치.\n");
@@ -483,7 +493,14 @@ void Cube::Move()
 {
 	switch (_moveAnimation)
 	{
-	case 0: //육면체가 위 아래로 크기 변환
+	case 0:
+		_scaleY += 0.05f;
+		_positionY += 0.05f / 2;
+		if (_scaleY >= 3.0f) {
+			_moveAnimation = 1;
+		}
+		break;
+	case 1: //육면체가 위 아래로 크기 변환
 		if (_moveArrow == 0) {
 			_scaleY += 0.01f * _speed;
 			_positionY += (0.01f * _speed) / 2;
