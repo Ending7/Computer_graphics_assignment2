@@ -38,6 +38,38 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 	case '3':
 
 		break;
+	/*reset*/
+	case 'k':
+		/*오브젝트*/
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].Reset();
+			}
+		}
+		/*상태 변화 변수*/
+		lightX = 0.0f, lightY = 3.0f, lightZ = 0.0f;
+		lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
+		lightRadiusZ = 0.0f;
+		cameraX = 0.0f;
+		cameraY = 7.0f;
+		cameraZ = 0.0f;
+		cameraRaidans = 0.0f;
+		lightPower = 1.0f;
+		lightVal = 90.0f;
+		devideWidth = 0;
+		devideHeight = 0;
+		/*체크 변수*/
+		lightRoate = 0;
+		lightSwitch = true;
+		glUniform1i(lightSwitchLocation, 0);
+		cameraRotate = 0;
+		snowSwitch = false;
+		lightColor = 0;
+		lightPosition = 0;
+		lightCenter = true;
+		startCheck = true;
+		system("cls");
+		break;
 	/*스피드 증가*/
 	case '+':
 		for (int i = 0; i < devideHeight; i++) {
@@ -243,6 +275,7 @@ void Devide() {
 	if (startCheck == true) {
 		printf("[1,2,3]:애니메이션 변환\n");
 		printf("[+, -]:육면체 이동하는 속도 증가/감소\n");
+		printf("[k]:모든 값 초기화(새롭게 가로세로 값을 입력받아 애니메이션 시작한다. 단축키 k로 지정!!!! s가 아님.)\n");
 		printf("[t]:조명을 켜기/끄기\n");
 		printf("[c]:조명 색을 다른 색으로 바뀌도록 한다. 3종류의 다른 색을 적용.\n");
 		printf("[o]:조명을 센터에 위치.\n");
@@ -283,7 +316,9 @@ void Devide() {
 				object[i][j].SetPosition(-(0.5f * 5.0f) + (j*2+1)*(5.0f / (devideWidth * 2)), 0.2f, -(0.5f * 5.0f) + (i * 2 + 1) * (5.0f / (devideHeight * 2)));
 			}
 		}
-		
+		for (int i = 0; i < 50; i++) {
+			snow[i].Reset();
+		}
 		startCheck = false;
 	}
 }
@@ -546,6 +581,15 @@ void Cube::MoveSpeedDown() {
 	_startMoveSpeed -= 0.1f;
 	_speed -= 0.11f;
 }
+void Cube::Reset() {
+	_Alive = false;
+	_moveAnimation = 0;
+	_moveArrow = 0;
+	_startMoveSpeed = 1.0f;
+	_speed = moveSpeed(eng);
+	_moveMin = moveMin(eng);
+	_moveMax = moveMax(eng);
+}
 /******************Class::Sphere 함수******************/
 void Sphere::InitBuffer()
 {
@@ -629,6 +673,11 @@ void Sphere::Transform()
 
 	glUniformMatrix4fv(transformLocate, 1, GL_FALSE, glm::value_ptr(_mixMat));
 }
+void Sphere::Reset() {
+	SetPosition((float)snowPosition(eng), 8.0f, (float)snowPosition(eng));
+	_revolution = (float)randomRev(eng);
+	_speed = (float)snowSpeed(eng);
+};
 /********************셰이더 프로그램*******************/
 void make_vertexShader()
 {

@@ -165,6 +165,7 @@ class Cube
 		void Transform();
 		void MoveSpeedUp();
 		void MoveSpeedDown();
+		void Reset();
 		/*애니메이션*/
 		void Move();
 		~Cube()
@@ -240,6 +241,7 @@ class Sphere
 		void Draw();
 		/*상태 변화*/
 		void Transform();
+		void Reset();
 		/*애니메이션*/
 		~Sphere()
 		{

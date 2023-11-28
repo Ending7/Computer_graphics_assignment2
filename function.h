@@ -9,7 +9,7 @@
 /*세이더 함수*/
 void make_vertexShader();
 void make_fragmentShader();
-void make_shaderProgram();
+void make_shaderProgram();	
 char* filetobuf(const char* file);
 bool Load_Object(const char* path);
 /*카메라 함수*/
