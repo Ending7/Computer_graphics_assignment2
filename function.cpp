@@ -172,6 +172,12 @@ GLvoid TimerFunction(int value)
 			cameraRaidans = 0.0f;
 		}
 	}
+	/*오브젝트 애니메이션*/
+	for (int i = 0; i < devideHeight; i++) {
+		for (int j = 0; j < devideWidth; j++) {
+			object[i][j].Move();
+		}
+	}
 	unsigned int lightPowerLocation = glGetUniformLocation(shaderID, "lightPower");
 	glUniform1f(lightPowerLocation, lightPower);
 
@@ -245,8 +251,8 @@ void Devide() {
 			for (int j = 0; j < devideWidth; j++) {
 				object[i][j].SetAlive(true);
 				object[i][j].InitBuffer();
-				object[i][j].SetColor(1.0f, 0.5f, 0.3f);
-				object[i][j].SetScale(5.0f / devideWidth, 0.1f, 5.0f / devideHeight);
+				object[i][j].SetColor(randomColor(eng), randomColor(eng), randomColor(eng));
+				object[i][j].SetScale(5.0f / devideWidth, 0.0f, 5.0f / devideHeight);
 				object[i][j].SetPosition(-(0.5f * 5.0f) + (j*2+1)*(5.0f / (devideWidth * 2)), 0.2f, -(0.5f * 5.0f) + (i * 2 + 1) * (5.0f / (devideHeight * 2)));
 			}
 		}
@@ -475,17 +481,22 @@ void Cube::Transform()
 }
 void Cube::Move()
 {
-	if (_moveArrow == 0) {
-		_moveX += 0.01f;
-	}
-	else if (_moveArrow == 1){
-		_moveX -= 0.01f;
+	switch (_moveAnimation)
+	{
+	case 0:
+		if (_moveArrow == 0) {
+			_scaleY += 0.01f * _speed;
+		}
+		else if (_moveArrow == 1) {
+			_scaleY -= 0.01f * _speed;
+		}
+		break;
 	}
 
-	if (_moveX >= 1.0f) {
+	if (_scaleY >= 5.0f) {
 		_moveArrow = 1;
 	}
-	else if (_moveX <= -1.0f) {
+	else if (_scaleY <= -5.0f) {
 		_moveArrow = 0;
 	}
 }

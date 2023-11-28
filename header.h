@@ -14,7 +14,9 @@ const auto seed = seeder.entropy() ? seeder() : time(nullptr);
 mt19937 eng(static_cast<mt19937::result_type>(seed));
 uniform_real_distribution<double> snowPosition(-2.5f, 2.5f);
 uniform_real_distribution<double> snowSpeed(2.0f, 7.0f);
+uniform_real_distribution<double> moveSpeed(1.0f, 10.0f);
 uniform_real_distribution<double> randomRev(0.0f, 360.0f);
+uniform_real_distribution<double> randomColor(0.0f, 1.0f);
 /*셰이더 프로그램 변수*/
 GLuint shaderID;
 GLuint vertexShader;
@@ -33,6 +35,7 @@ int lightColor = 0;
 int lightPosition = 0;
 bool lightCenter = true;
 bool startCheck = true;
+
 /*상태 변화 변수*/
 float lightX = 0.0f, lightY = 3.0f, lightZ = 0.0f;
 float lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
@@ -134,12 +137,13 @@ class Cube
 		float _moveX;
 		float _colorR, _colorG, _colorB;
 		float _scaleX, _scaleY, _scaleZ;
-		int _moveArrow;
+		int _moveAnimation = 0;
+		int _moveArrow = 0;
+		float _speed;
 	public:
 		Cube()
 		{
-
-
+			_speed = moveSpeed(eng);
 		};
 		/*객체 초기화*/
 		void SetAlive(bool alive);

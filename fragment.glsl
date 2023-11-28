@@ -18,7 +18,7 @@ uniform int lightSwitch;
 void main()
 {	
 	/*앰비언트 구하는 공식*/
-	float ambientLight = 0.5f; //색이 진해진다.
+	float ambientLight = 0.2f; //색이 진해진다.
 	vec3 ambient = ambientLight * lightColor; //주변 조명 값, 앰비언트에서 주변 조명 값은 1.0f으로 적용된다. (게임수학에서 배울 때 이러한 이유 때문에 사용하지 않는다고 했었다)
 
 	vec3 normalVector = normalize (Normal); //노말값을 정규화한다. 노말값들은 전부 정규화 되야 함. 그렇지 않으면 제대로 출력할 수 없다.
