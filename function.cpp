@@ -194,7 +194,7 @@ void InitObject()
 	}
 	/*PLAIN*/
 	cube.SetColor(0.3f, 0.3f, 0.3f);
-	cube.SetScale(5.0f,0.1f,5.0f);
+	cube.SetScale(5.0f,0.2f,5.0f);
 }
 void InitBuffer()
 {
@@ -240,27 +240,14 @@ void Devide() {
 			else cout << "다시 입력" << endl;
 		}
 
-		///*오브젝트*/
-		//for (int i = 0; i < devideWidth * devideHeight; i++) {
-		//	object.push_back(Cube());
-		//}
-		//for (int i = 0; i < object.size(); i++) {
-		//	object[i].SetAlive(true);
-		//	object[i].InitBuffer();
-		//	object[i].SetColor(1.0f, 0.5f, 0.3f);
-		//	object[i].SetScale(1.0f, 1.0f, 1.0f);
-		//	object[i].SetPosition(0.0f+i*0.1f, 1.0f, 0.0f);
-		//}
-		/*cout << "현재 만들어진 도형의 개수: " << object.size() << endl;*/
-
 		/*오브젝트*/
 		for (int i = 0; i < devideHeight; i++) {
 			for (int j = 0; j < devideWidth; j++) {
 				object[i][j].SetAlive(true);
 				object[i][j].InitBuffer();
 				object[i][j].SetColor(1.0f, 0.5f, 0.3f);
-				object[i][j].SetScale(5.0f / devideWidth, 1.0f, 5.0f / devideHeight);
-				object[i][j].SetPosition(-(0.5f * 5.0f) +  (5.0f / (devideWidth * 2)), 0.0f, -(0.5f * 5.0f) + (5.0f / (devideHeight * 2)));
+				object[i][j].SetScale(5.0f / devideWidth, 0.1f, 5.0f / devideHeight);
+				object[i][j].SetPosition(-(0.5f * 5.0f) + (j*2+1)*(5.0f / (devideWidth * 2)), 0.2f, -(0.5f * 5.0f) + (i * 2 + 1) * (5.0f / (devideHeight * 2)));
 			}
 		}
 		
