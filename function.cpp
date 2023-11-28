@@ -483,22 +483,26 @@ void Cube::Move()
 {
 	switch (_moveAnimation)
 	{
-	case 0:
+	case 0: //육면체가 위 아래로 크기 변환
 		if (_moveArrow == 0) {
 			_scaleY += 0.01f * _speed;
+			_positionY += (0.01f * _speed) / 2;
 		}
 		else if (_moveArrow == 1) {
 			_scaleY -= 0.01f * _speed;
+			_positionY -= (0.01f * _speed) / 2;
+		}
+
+		if (_scaleY >= _moveMax) {
+			_moveArrow = 1;
+		}
+		else if (_scaleY <= _moveMin) {
+			_moveArrow = 0;
 		}
 		break;
 	}
 
-	if (_scaleY >= 5.0f) {
-		_moveArrow = 1;
-	}
-	else if (_scaleY <= -5.0f) {
-		_moveArrow = 0;
-	}
+	
 }
 /******************Class::Sphere 함수******************/
 void Sphere::InitBuffer()

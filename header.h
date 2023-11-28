@@ -17,6 +17,8 @@ uniform_real_distribution<double> snowSpeed(2.0f, 7.0f);
 uniform_real_distribution<double> moveSpeed(1.0f, 10.0f);
 uniform_real_distribution<double> randomRev(0.0f, 360.0f);
 uniform_real_distribution<double> randomColor(0.0f, 1.0f);
+uniform_real_distribution<double> moveMin(0.0f, 1.0);
+uniform_real_distribution<double> moveMax(2.0f, 3.0f);
 /*셰이더 프로그램 변수*/
 GLuint shaderID;
 GLuint vertexShader;
@@ -41,7 +43,7 @@ float lightX = 0.0f, lightY = 3.0f, lightZ = 0.0f;
 float lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
 float lightRadiusZ = 0.0f;
 float cameraX = 0.0f;
-float cameraY = 5.0f;
+float cameraY = 7.0f;
 float cameraZ = 0.0f;
 float cameraRaidans = 0.0f;
 float lightPower = 1.0f;
@@ -140,9 +142,13 @@ class Cube
 		int _moveAnimation = 0;
 		int _moveArrow = 0;
 		float _speed;
+		float _moveMin;
+		float _moveMax;
 	public:
 		Cube()
 		{
+			_moveMin = moveMin(eng);
+			_moveMax = moveMax(eng);
 			_speed = moveSpeed(eng);
 		};
 		/*객체 초기화*/
