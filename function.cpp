@@ -259,14 +259,14 @@ void Devide() {
 				object[i][j].SetAlive(true);
 				object[i][j].InitBuffer();
 				object[i][j].SetColor(1.0f, 0.5f, 0.3f);
-				object[i][j].SetScale(1.0f, 1.0f, 1.0f);
-				object[i][j].SetPosition(0.0f + i * 0.1f, 1.0f, 0.0f);
+				object[i][j].SetScale(5.0f / devideWidth, 1.0f, 5.0f / devideHeight);
+				object[i][j].SetPosition(-(0.5f * 5.0f) +  (5.0f / (devideWidth * 2)), 0.0f, -(0.5f * 5.0f) + (5.0f / (devideHeight * 2)));
 			}
 		}
+		
 		startCheck = false;
 	}
 }
-
 /*********************화면 출력 함수*******************/
 void Draw()
 {
