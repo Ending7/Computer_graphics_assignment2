@@ -145,6 +145,7 @@ class Cube
 		float _speed;
 		float _moveMin;
 		float _moveMax;
+		int _widthNum;
 	public:
 		Cube()
 		{
@@ -157,6 +158,7 @@ class Cube
 		void SetColor(float r, float g, float b);
 		void SetPosition(float x, float y, float z);
 		void SetScale(float x, float y, float z);
+		void SetWidth(int widthNum);
 		/*버퍼 초기화*/
 		void InitBuffer();
 		/*그리기*/

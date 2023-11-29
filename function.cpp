@@ -45,10 +45,18 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 		}
 		break;
 	case '2':
-
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].ChangeAnimation(2);
+			}
+		}
 		break;
 	case '3':
-
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].ChangeAnimation(3);
+			}
+		}
 		break;
 	/*reset*/
 	case 'k':
@@ -323,6 +331,7 @@ void Devide() {
 			for (int j = 0; j < devideWidth; j++) {
 				object[i][j].SetAlive(true);
 				object[i][j].InitBuffer();
+				object[i][j].SetWidth(j);
 				object[i][j].SetColor(randomColor(eng), randomColor(eng), randomColor(eng));
 				object[i][j].SetScale(5.0f / devideWidth, 0.0f, 5.0f / devideHeight);
 				object[i][j].SetPosition(-(0.5f * 5.0f) + (j*2+1)*(5.0f / (devideWidth * 2)), 0.2f, -(0.5f * 5.0f) + (i * 2 + 1) * (5.0f / (devideHeight * 2)));
@@ -526,6 +535,10 @@ void Cube::SetAlive(bool alive)
 		_Alive = false;
 
 }
+void Cube::SetWidth(int widthNum)
+{
+	_widthNum = widthNum;
+}
 void Cube::SetColor(float r, float g, float b)
 {
 	_colorR = r;
@@ -573,7 +586,6 @@ void Cube::Move()
 			_scaleY -= 0.01f * _speed;
 			_positionY -= (0.01f * _speed) / 2;
 		}
-
 		if (_scaleY >= _moveMax) {
 			_moveArrow = 1;
 		}
@@ -581,9 +593,27 @@ void Cube::Move()
 			_moveArrow = 0;
 		}
 		break;
+	case 2:
+		if (_moveArrow == 0) {
+			_scaleY += 0.05f * _startMoveSpeed;
+			_positionY += (0.05f * _startMoveSpeed) / 2;
+			if (_scaleY >= 3.5f) {
+				_scaleY = 3.5f;
+				_positionY = _scaleY / 2;
+				_moveArrow = 1;
+			}
+		}
+		else if (_moveArrow == 1) {
+			_scaleY -= 0.05f * _startMoveSpeed;
+			_positionY -= (0.05f * _startMoveSpeed) / 2;
+			if (_scaleY <= 0.0f) {
+				_scaleY = 0.1f;
+				_positionY = _scaleY / 2;
+				_moveArrow = 0;
+			}
+		}
+		break;
 	}
-
-	
 }
 void Cube::MoveSpeedUp() {
 	_startMoveSpeed += 0.11f;
@@ -594,12 +624,24 @@ void Cube::MoveSpeedDown() {
 	_speed -= 0.11f;
 }
 void Cube::ChangeAnimation(int type) {
-	_positionY = 0.0f;
-	_scaleY = 0.0f;
-	_moveAnimation = type;
+	if (type == 0 || type == 1) {
+		_moveMin = moveMin(eng);
+		_moveMax = moveMax(eng);
+		_speed = moveSpeed(eng);
+		_positionY = 0.0f;
+		_scaleY = 0.0f;
+		_moveAnimation = type;
+	}
+	else if (type == 2) {
+		_moveArrow = 0;
+		_scaleY = 0.01f + _widthNum * 0.1f;
+		_positionY = (0.01f + _widthNum * 0.1f) / 2;
+		_moveAnimation = type;
+	}
 }
 void Cube::Reset() {
 	_Alive = false;
+	_widthNum = 0;
 	_moveAnimation = 0;
 	_moveArrow = 0;
 	_startMoveSpeed = 1.0f;
