@@ -613,6 +613,15 @@ void Cube::Move()
 			}
 		}
 		break;
+	case 3:
+		if (_positionY <= 5.0f) {
+			_positionY += 0.01f * _speed;
+		}
+		if (_positionY > 5.0f) {
+			_positionY = 5.0f;
+		}
+
+		break;
 	}
 }
 void Cube::MoveSpeedUp() {
@@ -636,6 +645,13 @@ void Cube::ChangeAnimation(int type) {
 		_moveArrow = 0;
 		_scaleY = 0.01f + _widthNum * 0.1f;
 		_positionY = (0.01f + _widthNum * 0.1f) / 2;
+		_moveAnimation = type;
+	}
+	else if (type == 3) {
+		_speed = slowSpeed(eng);
+		_moveArrow = 0;
+		_scaleY = 1.0f;
+		_positionY = _scaleY /2;
 		_moveAnimation = type;
 	}
 }

@@ -15,6 +15,7 @@ mt19937 eng(static_cast<mt19937::result_type>(seed));
 uniform_real_distribution<double> snowPosition(-2.5f, 2.5f);
 uniform_real_distribution<double> snowSpeed(2.0f, 7.0f);
 uniform_real_distribution<double> moveSpeed(1.0f, 10.0f);
+uniform_real_distribution<double> slowSpeed(1.0f, 2.0f);
 uniform_real_distribution<double> randomRev(0.0f, 360.0f);
 uniform_real_distribution<double> randomColor(0.0f, 1.0f);
 uniform_real_distribution<double> moveMin(0.0f, 1.0);
@@ -39,7 +40,7 @@ bool lightCenter = true;
 bool startCheck = true;
 
 /*상태 변화 변수*/
-float lightX = 0.0f, lightY = 3.0f, lightZ = 0.0f;
+float lightX = 0.0f, lightY = 4.5f, lightZ = 0.0f;
 float lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
 float lightRadiusZ = 0.0f;
 float cameraX = 0.0f;
