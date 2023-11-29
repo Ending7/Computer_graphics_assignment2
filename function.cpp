@@ -33,37 +33,56 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 	case '0':
 		for (int i = 0; i < devideHeight; i++) {
 			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
 				object[i][j].ChangeAnimation(0);
 			}
 		}
+		meteoType = 0;
 		break;
 	case '1':
 		for (int i = 0; i < devideHeight; i++) {
 			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
 				object[i][j].ChangeAnimation(1);
 			}
 		}
+		meteoType = 0;
 		break;
 	case '2':
 		for (int i = 0; i < devideHeight; i++) {
 			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
 				object[i][j].ChangeAnimation(2);
 			}
 		}
+		meteoType = 0;
 		break;
 	case '3':
 		for (int i = 0; i < devideHeight; i++) {
 			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
 				object[i][j].ChangeAnimation(3);
 			}
 		}
+		meteoType = 0;
 		break;
 	case '4':
 		for (int i = 0; i < devideHeight; i++) {
 			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
 				object[i][j].ChangeAnimation(4);
 			}
 		}
+		meteoType = 0;
+		break;
+	case '5':
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].SetAlive(true);
+				object[i][j].ChangeAnimation(5);
+			}
+		}
+		meteoType = 1;
 		break;
 	/*reset*/
 	case 'k':
@@ -74,7 +93,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 			}
 		}
 		/*상태 변화 변수*/
-		lightX = 0.0f, lightY = 3.0f, lightZ = 0.0f;
+		lightX = 0.0f, lightY = 4.5f, lightZ = 0.0f;
 		lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
 		lightRadiusZ = 0.0f;
 		cameraX = 0.0f;
@@ -95,6 +114,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 		lightPosition = 0;
 		lightCenter = true;
 		startCheck = true;
+		meteoType = 0;
 		system("cls");
 		break;
 	/*스피드 증가*/
@@ -262,6 +282,19 @@ GLvoid TimerFunction(int value)
 			object[i][j].Move();
 		}
 	}
+	/*메테오*/
+	if (meteoType == 0) {
+		meteo.SetAlive(false);
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
+	}
+	else if (meteoType == 1) {
+		meteo.SetAlive(true);
+		meteo.Move();
+	}
+	else if (meteoType == 2) {
+		meteo.SetAlive(true);
+		meteo.SetPosition(0.0f, 0.0f, 0.0f);
+	}
 	unsigned int lightPowerLocation = glGetUniformLocation(shaderID, "lightPower");
 	glUniform1f(lightPowerLocation, lightPower);
 
@@ -285,6 +318,10 @@ void InitObject()
 	/*PLAIN*/
 	cube.SetColor(0.3f, 0.3f, 0.3f);
 	cube.SetScale(5.0f,0.2f,5.0f);
+	/*메테오*/
+	meteo.SetPosition(0.0f, 3.0f, 0.0f);
+	meteo.SetColor(0.8f, 0.2f, 0.3f);
+	meteo.SetScale(3.0f, 3.0f, 3.0f);
 }
 void InitBuffer()
 {
@@ -295,12 +332,14 @@ void InitBuffer()
 	}
 	/*PLAIN*/
 	cube.InitBuffer();
+	/*메테오*/
+	meteo.InitBuffer();
 	/*조명*/
 	lightCube.InitBuffer();
 }
 void Devide() {
 	if (startCheck == true) {
-		printf("[0,1,2,3]:애니메이션 변환\n");
+		printf("[0,1,2,3,4,5]:애니메이션 변환\n");
 		printf("[+, -]:육면체 이동하는 속도 증가/감소\n");
 		printf("[k]:모든 값 초기화(새롭게 가로세로 값을 입력받아 애니메이션 시작한다. 단축키 k로 지정!!!! s가 아님.)\n");
 		printf("[t]:조명을 켜기/끄기\n");
@@ -370,6 +409,8 @@ void Draw()
 			object[i][j].Draw();
 		}
 	}
+	/*메테오*/
+	meteo.Draw();
 	/*조명*/
 	lightCube.Draw();
 
@@ -677,6 +718,16 @@ void Cube::Move()
 		if (_positionY < 0.5f) {
 			_positionY = 0.5f;
 		}
+	case 5:
+		if (meteoType == 2) {
+			if (_scaleY >= 0.0f) {
+				_scaleY -= 0.2f;
+				_positionY += 0.1f;
+			}	
+			else {
+				_Alive = false;
+			}
+		}
 		break;
 	}
 }
@@ -686,7 +737,13 @@ void Cube::MoveSpeedUp() {
 }
 void Cube::MoveSpeedDown() {
 	_startMoveSpeed -= 0.1f;
-	_speed -= 0.11f;
+	_speed -= 0.1f;
+	if (_startMoveSpeed <= 0.1f) {
+		_startMoveSpeed = 0.1f;
+	}
+	else if (_speed <= 0.1f) {
+		_speed = 0.1f;
+	}
 }
 void Cube::ChangeAnimation(int type) {
 	if (type == 0 || type == 1) {
@@ -715,6 +772,13 @@ void Cube::ChangeAnimation(int type) {
 		_moveArrow = 0;
 		_scaleY = 1.0f;
 		_positionY = 5.0f;
+		_moveAnimation = type;
+	}
+	else if (type == 5) {
+		_speed = slowSpeed(eng);
+		_moveArrow = 0;
+		_scaleY = 3.0f;
+		_positionY = 1.5f;
 		_moveAnimation = type;
 	}
 }
@@ -812,6 +876,99 @@ void Sphere::Transform()
 	glUniformMatrix4fv(transformLocate, 1, GL_FALSE, glm::value_ptr(_mixMat));
 }
 void Sphere::Reset() {
+	SetPosition((float)snowPosition(eng), 8.0f, (float)snowPosition(eng));
+	_revolution = (float)randomRev(eng);
+	_speed = (float)snowSpeed(eng);
+};
+/******************Class::Meteo 함수******************/
+void Meteo::InitBuffer()
+{
+	Load_Object("sphere.obj");
+
+	GLint pAttribute = glGetAttribLocation(shaderID, "vPos");
+	GLint vAttribute = glGetAttribLocation(shaderID, "vNormal");
+	/*create buffer*/
+	glGenVertexArrays(1, &_vao);
+	glGenBuffers(2, _vbo);
+	glGenBuffers(1, &_ebo);
+
+	/*vao binding*/
+	glBindVertexArray(_vao);
+
+	/*vbo binding*/
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(pAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(vAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexIndices.size() * sizeof(unsigned int), &vertexIndices[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(vAttribute);
+	glEnableVertexAttribArray(pAttribute);
+}
+void Meteo::Draw()
+{
+	if (_Alive == true)
+	{
+		glBindVertexArray(_vao);
+		/*도형의 색*/
+		int objColorLocation = glGetUniformLocation(shaderID, "objectColor");
+		glUniform3f(objColorLocation, _colorR, _colorG, _colorB);
+
+		/*초기화 후 변환 행렬 채우기*/
+		Transform();
+		glDrawElements(GL_TRIANGLES, 3000, GL_UNSIGNED_INT, 0);
+	}
+}
+void Meteo::SetAlive(bool alive)
+{
+	if (alive == true)
+		_Alive = true;
+	else
+		_Alive = false;
+}
+void Meteo::SetColor(float r, float g, float b)
+{
+	_colorR = r;
+	_colorG = g;
+	_colorB = b;
+}
+void Meteo::SetPosition(float x, float y, float z)
+{
+	_positionX = x;
+	_positionY = y;
+	_positionZ = z;
+}
+void Meteo::SetScale(float x, float y, float z)
+{
+	_scaleX = x;
+	_scaleY = y;
+	_scaleZ = z;
+}
+void Meteo::Transform()
+{
+	unsigned int transformLocate = glGetUniformLocation(shaderID, "model");
+	_revolution += 4.0f;
+
+	/*리셋 한번 해주고*/
+	_mixMat = glm::mat4{ 1.0f };
+	_mixMat = glm::translate(_mixMat, glm::vec3(_positionX, _positionY, _positionZ));
+	_mixMat = glm::scale(_mixMat, glm::vec3(_scaleX, _scaleY, _scaleZ));
+
+	glUniformMatrix4fv(transformLocate, 1, GL_FALSE, glm::value_ptr(_mixMat));
+}
+void Meteo::Move()
+{
+	_positionY -= 0.05f;
+	if (_positionY <= 0.0f) {
+		meteoType = 2;
+	}
+}
+void Meteo::Reset() {
 	SetPosition((float)snowPosition(eng), 8.0f, (float)snowPosition(eng));
 	_revolution = (float)randomRev(eng);
 	_speed = (float)snowSpeed(eng);

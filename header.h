@@ -38,7 +38,7 @@ int lightColor = 0;
 int lightPosition = 0;
 bool lightCenter = true;
 bool startCheck = true;
-
+int meteoType;
 /*상태 변화 변수*/
 float lightX = 0.0f, lightY = 4.5f, lightZ = 0.0f;
 float lightRadians = 90.0f / 360.0f * 2.0f * 3.141592f;
@@ -254,4 +254,46 @@ class Sphere
 		};
 	};
 Sphere snow[50];
+/*메테오*/
+class Meteo
+{
+private:
+	/*배열 관련*/
+	GLuint _vao, _vbo[2], _ebo;
+	/*행렬 관련*/
+	glm::mat4 _mixMat = glm::mat4{ 1.0f };
+	/*상태 변화 관련*/
+	bool _Alive = false;
+	float _positionX, _positionY, _positionZ;
+	float _colorR, _colorG, _colorB;
+	float _scaleX, _scaleY, _scaleZ;
+	float _revolution;
+	float _speed = 0.0f;
+public:
+	Meteo()
+	{
+		_revolution = (float)randomRev(eng);
+		_speed = (float)snowSpeed(eng);
+	};
+	/*객체 초기화*/
+	void SetAlive(bool alive);
+	void SetColor(float r, float g, float b);
+	void SetPosition(float x, float y, float z);
+	void SetScale(float x, float y, float z);
+	/*버퍼 초기화*/
+	void InitBuffer();
+	/*그리기*/
+	void Draw();
+	/*상태 변화*/
+	void Transform();
+	void Reset();
+	void Move();
+	/*애니메이션*/
+	~Meteo()
+	{
+
+
+	};
+};
+Meteo meteo;
 
