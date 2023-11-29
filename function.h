@@ -14,6 +14,7 @@ char* filetobuf(const char* file);
 bool Load_Object(const char* path);
 /*카메라 함수*/
 void CameraTransform();
+void CameraTransform2();
 /*조명 함수*/
 void LightTransform();
 /*초기화 함수*/

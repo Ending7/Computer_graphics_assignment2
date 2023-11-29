@@ -306,7 +306,7 @@ void Devide() {
 		printf("[t]:조명을 켜기/끄기\n");
 		printf("[c]:조명 색을 다른 색으로 바뀌도록 한다. 3종류의 다른 색을 적용.\n");
 		printf("[o]:조명을 센터에 위치.\n");
-		printf("[u,U]:조명을 위/아래로 이동\n");
+		printf("[u,U]:조명을 아래/위로 이동\n");
 		printf("[r,R]:조명을 바닥의 y축을 기준으로 양/음 방향으로 회전. \n");
 		printf("[n,f]:조명을 가까이/멀리 이동\n");
 		printf("[[,]]:조명 밝기 감소/증가\n");
@@ -353,8 +353,28 @@ void Devide() {
 /*********************화면 출력 함수*******************/
 void Draw()
 {
-	/*카메라 변환*/
+	/********전체 맵********/
 	CameraTransform();
+	/*조명 변환*/
+	LightTransform();
+	/*눈*/
+	for (int i = 0; i < 50; i++)
+	{
+		snow[i].Draw();
+	}
+	/*PLAIN*/
+	cube.Draw();
+	/*오브젝트*/
+	for (int i = 0; i < devideHeight; i++) {
+		for (int j = 0; j < devideWidth; j++) {
+			object[i][j].Draw();
+		}
+	}
+	/*조명*/
+	lightCube.Draw();
+
+	/********미니맵********/
+	CameraTransform2();
 	/*조명 변환*/
 	LightTransform();
 	/*눈*/
@@ -376,8 +396,7 @@ void Draw()
 /*******************카메라 변환 함수*******************/
 void CameraTransform()
 {
-
-
+	cameraPos.y = 7.0f;
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
 
@@ -395,6 +414,29 @@ void CameraTransform()
 	//종횡비 1:1로 설정, 수직 시야각 60', z축으로 5.0만큼 늘렸다.
 	pTransform = glm::perspective(glm::radians(60.0f), (float)800 / (float)800, 0.1f, 500.0f);
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, &pTransform[0][0]);
+	glViewport(0, 0, 800, 800);
+}
+void CameraTransform2()
+{
+	cameraPos.y = 50.0f;
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::lookAt(cameraPos, cameraDirection, cameraUp);
+
+	view = glm::rotate(view, glm::radians(cameraRaidans), glm::vec3(0.0f, 1.0f, 0.0f));
+	if (cameraRotate != 0) {
+		view = glm::translate(view, glm::vec3(-cameraX, 0.0f, -cameraZ));
+	}
+	unsigned int viewLocation = glGetUniformLocation(shaderID, "view"); //--- 뷰잉 변환 설정
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+	//원근투영
+	unsigned int projLoc = glGetUniformLocation(shaderID, "projection");
+	glm::mat4 pTransform = glm::mat4(1.0f);
+
+	//종횡비 1:1로 설정, 수직 시야각 60', z축으로 5.0만큼 늘렸다.
+	pTransform = glm::perspective(glm::radians(30.0f), (float)800 / (float)800, 0.1f, 500.0f);
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, &pTransform[0][0]);
+	glViewport(400, -200, 600, 600);
 }
 /********************조명 변환 함수********************/
 void LightTransform()
