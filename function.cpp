@@ -58,6 +58,13 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 			}
 		}
 		break;
+	case '4':
+		for (int i = 0; i < devideHeight; i++) {
+			for (int j = 0; j < devideWidth; j++) {
+				object[i][j].ChangeAnimation(4);
+			}
+		}
+		break;
 	/*reset*/
 	case 'k':
 		/*오브젝트*/
@@ -620,7 +627,14 @@ void Cube::Move()
 		if (_positionY > 5.0f) {
 			_positionY = 5.0f;
 		}
-
+		break;
+	case 4:
+		if (_positionY >= 0.5f) {
+			_positionY -= 0.01f * _speed;
+		}
+		if (_positionY < 0.5f) {
+			_positionY = 0.5f;
+		}
 		break;
 	}
 }
@@ -651,7 +665,14 @@ void Cube::ChangeAnimation(int type) {
 		_speed = slowSpeed(eng);
 		_moveArrow = 0;
 		_scaleY = 1.0f;
-		_positionY = _scaleY /2;
+		_positionY = 0.5f;
+		_moveAnimation = type;
+	}
+	else if (type == 4) {
+		_speed = slowSpeed(eng);
+		_moveArrow = 0;
+		_scaleY = 1.0f;
+		_positionY = 5.0f;
 		_moveAnimation = type;
 	}
 }

@@ -15,7 +15,7 @@ mt19937 eng(static_cast<mt19937::result_type>(seed));
 uniform_real_distribution<double> snowPosition(-2.5f, 2.5f);
 uniform_real_distribution<double> snowSpeed(2.0f, 7.0f);
 uniform_real_distribution<double> moveSpeed(1.0f, 10.0f);
-uniform_real_distribution<double> slowSpeed(1.0f, 2.0f);
+uniform_real_distribution<double> slowSpeed(1.0f, 4.0f);
 uniform_real_distribution<double> randomRev(0.0f, 360.0f);
 uniform_real_distribution<double> randomColor(0.0f, 1.0f);
 uniform_real_distribution<double> moveMin(0.0f, 1.0);
