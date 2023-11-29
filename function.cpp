@@ -37,6 +37,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 				object[i][j].ChangeAnimation(0);
 			}
 		}
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
 		meteoType = 0;
 		break;
 	case '1':
@@ -46,6 +47,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 				object[i][j].ChangeAnimation(1);
 			}
 		}
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
 		meteoType = 0;
 		break;
 	case '2':
@@ -55,6 +57,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 				object[i][j].ChangeAnimation(2);
 			}
 		}
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
 		meteoType = 0;
 		break;
 	case '3':
@@ -64,6 +67,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 				object[i][j].ChangeAnimation(3);
 			}
 		}
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
 		meteoType = 0;
 		break;
 	case '4':
@@ -73,6 +77,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 				object[i][j].ChangeAnimation(4);
 			}
 		}
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
 		meteoType = 0;
 		break;
 	case '5':
@@ -82,6 +87,7 @@ GLvoid Keyboard(unsigned char button, int x, int y)
 				object[i][j].ChangeAnimation(5);
 			}
 		}
+		meteo.SetPosition(0.0f, 6.0f, 0.0f);
 		meteoType = 1;
 		break;
 	/*reset*/
